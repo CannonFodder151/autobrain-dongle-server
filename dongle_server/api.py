@@ -110,7 +110,13 @@ async def internal_whitelist(
             existing.user_id = user_id
     elif existing is not None:
         await db.delete(existing)
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(
+            409, f"Serial {serial} already registered to another device"
+        )
     return JSONResponse(
         status_code=200,
         content={"ok": True, "serial": serial, "whitelisted": paid},

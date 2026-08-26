@@ -52,7 +52,7 @@ async def verify_device_with_backend(serial: str, api_key: str) -> dict:
     try:
         async with httpx.AsyncClient(timeout=10) as client:
             resp = await client.post(
-                f"{settings.AUTBRAIN_BACKEND_URL.rstrip('/')}/api/v1/devices/verify",
+                f"{settings.AUTOBRIAN_BACKEND_URL.rstrip('/')}/api/v1/devices/verify",
                 json=payload,
                 headers={"X-Internal-Api-Key": settings.api_key()},
             )
@@ -62,7 +62,10 @@ async def verify_device_with_backend(serial: str, api_key: str) -> dict:
         raise HTTPException(status_code=403, detail="Serial or device not registered")
     if resp.status_code != 200:
         raise HTTPException(status_code=502, detail="Backend verification failed")
-    data = resp.json()
+    try:
+        data = resp.json()
+    except ValueError:
+        raise HTTPException(status_code=502, detail="Backend returned invalid JSON")
     if data.get("serial_matched") is not True:
         raise HTTPException(status_code=403, detail="Serial does not match device")
     if not data.get("paid"):

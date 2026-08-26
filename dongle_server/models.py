@@ -5,7 +5,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, String, Text
+from sqlalchemy import DateTime, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .db import Base
@@ -33,6 +33,7 @@ class FirmwareManifest(Base):
     __table_args__ = (
         # A model never has two manifests of the same version (re-publish =
         # bump the version string).
+        UniqueConstraint("model", "version", name="uq_manifests_model_version"),
     )
 
 

@@ -11,7 +11,7 @@ import os
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test_dongle.db"
 os.environ["ENVIRONMENT"] = "test"
 os.environ["DONGLE_SERVER_API_KEY"] = "test-internal-key"
-os.environ["AUTBRAIN_BACKEND_URL"] = "http://backend.test"
+os.environ["AUTOBRIAN_BACKEND_URL"] = "http://backend.test"
 os.environ["MINIO_BUCKET"] = "autobrain-assets"
 os.environ.pop("DONGLE_SERVER_API_KEY_FILE", None)
 os.environ.pop("MINIO_ACCESS_KEY_FILE", None)
@@ -21,11 +21,20 @@ os.environ.pop("WEB_UI_BASIC_PASSWORD_FILE", None)
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import delete
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from dongle_server.db import engine, create_all, async_session
+from dongle_server.db import engine, create_all, async_session, Base
 from dongle_server.main import app
 from dongle_server.models import FirmwareManifest, SerialWhitelist
+
+
+@pytest.fixture(autouse=True, scope="session")
+async def _ensure_schema():
+    """Drop + recreate all tables so schema changes (e.g. new constraints)
+    are picked up even when the on-disk SQLite file persists between runs."""
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    await create_all()
+    yield
 
 
 @pytest.fixture(autouse=True)

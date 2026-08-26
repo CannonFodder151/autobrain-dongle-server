@@ -23,11 +23,12 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="", extra="ignore")
 
     DATABASE_URL: str = "sqlite+aiosqlite:///./dongle.db"
-    AUTBRAIN_BACKEND_URL: str = "http://backend:8006"
+    AUTOBRIAN_BACKEND_URL: str = "http://backend:8006"
     DONGLE_SERVER_API_KEY: str = ""
     DONGLE_SERVER_API_KEY_FILE: str | None = None
 
     MINIO_ENDPOINT: str = "minio:9000"
+    MINIO_EXTERNAL_ENDPOINT: str = ""
     MINIO_BUCKET: str = "autobrain-assets"
     MINIO_ACCESS_KEY: str = ""
     MINIO_SECRET_KEY: str = ""
