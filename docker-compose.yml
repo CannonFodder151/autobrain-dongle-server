@@ -1,0 +1,27 @@
+# Local dev / self-hosted compose for autobrain-dongle-server.
+# The hosted stack (Oracle VM, Portainer EP5) overlays secrets + the AUTBRAIN_BACKEND_URL.
+services:
+  dongle-server:
+    build: .
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./dongle.db
+      - AUTBRAIN_BACKEND_URL=http://backend:8000
+      - DONGLE_SERVER_API_KEY=${DONGLE_SERVER_API_KEY:-changeme-internal-key}
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_BUCKET=${MINIO_BUCKET:-autobrain-assets}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-minioadmin}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-minioadmin}
+      - MINIO_SECURE=false
+      - WEB_UI_BASIC_USER=${WEB_UI_BASIC_USER:-admin}
+      - WEB_UI_BASIC_PASSWORD=${WEB_UI_BASIC_PASSWORD:-changeme}
+    ports:
+      - "8012:8000"
+    depends_on:
+      - minio
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    command: server /data --console-address ':9001'

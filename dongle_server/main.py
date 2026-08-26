@@ -1,0 +1,29 @@
+"""Application factory: mounts routers, templates, static, lifecycle."""
+
+from __future__ import annotations
+
+from contextlib import asynccontextmanager
+from pathlib import Path
+
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
+from .api import device, internal, web
+from .db import create_all
+from .storage import get_storage
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await create_all()
+    yield
+
+
+app = FastAPI(title="autobrain-dongle-server", lifespan=lifespan)
+app.include_router(internal, prefix="/_internal")
+app.include_router(device)
+app.include_router(web)
+
+_static = Path(__file__).resolve().parent / "static"
+if _static.is_dir():
+    app.mount("/static", StaticFiles(directory=str(_static)), name="static")
