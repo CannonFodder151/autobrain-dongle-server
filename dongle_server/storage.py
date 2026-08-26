@@ -80,11 +80,19 @@ class MinioStorage(Storage):
 
 
 def _externalize_url(url: str) -> str:
-    """Map the internal MinIO host to the external public endpoint."""
+    """Map the internal MinIO host to the external public endpoint.
+
+    The MinIO SDK returns presigned URLs using the internal container DNS name
+    (e.g. http://minio:9000/bucket/key?signature). External clients need the
+    public hostname. If MINIO_EXTERNAL_ENDPOINT is unset, return the URL
+    unchanged (internal-only consumers).
+    """
+    if not settings.MINIO_EXTERNAL_ENDPOINT:
+        return url
     scheme = "https" if settings.MINIO_SECURE else "http"
     internal = f"{scheme}://{settings.MINIO_ENDPOINT}"
     if url.startswith(internal):
-        return settings.MINIO_BUCKET.rstrip("/") + url[len(internal):]
+        return f"{scheme}://{settings.MINIO_EXTERNAL_ENDPOINT}{url[len(internal):]}"
     return url
 
 

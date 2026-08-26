@@ -5,7 +5,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
 
 from .api import device, internal, web
@@ -20,6 +20,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="autobrain-dongle-server", lifespan=lifespan)
+
+
+@app.get("/health")
+async def health() -> dict:
+    return {"status": "ok"}
+
+
 app.include_router(internal, prefix="/_internal")
 app.include_router(device)
 app.include_router(web)
