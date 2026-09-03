@@ -52,7 +52,7 @@ async def verify_device_with_backend(serial: str, api_key: str) -> dict:
     try:
         async with httpx.AsyncClient(timeout=10) as client:
             resp = await client.post(
-                f"{settings.AUTOBRIAN_BACKEND_URL.rstrip('/')}/api/v1/devices/verify",
+                f"{settings.AUTOBRAIN_BACKEND_URL.rstrip('/')}/api/v1/devices/verify",
                 json=payload,
                 headers={"X-Internal-Api-Key": settings.api_key()},
             )

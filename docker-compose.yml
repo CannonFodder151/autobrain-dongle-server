@@ -1,12 +1,12 @@
 # Local dev / self-hosted compose for autobrain-dongle-server.
-# The hosted stack (Oracle VM, Portainer EP5) overlays secrets + the AUTOBRIAN_BACKEND_URL.
+# The hosted stack (Oracle VM, Portainer EP5) overlays secrets + the AUTOBRAIN_BACKEND_URL.
 services:
   dongle-server:
     build: .
     restart: unless-stopped
     environment:
       - DATABASE_URL=sqlite+aiosqlite:///./dongle.db
-      - AUTOBRIAN_BACKEND_URL=http://backend:8000
+      - AUTOBRAIN_BACKEND_URL=http://backend:8000
       - DONGLE_SERVER_API_KEY=${DONGLE_SERVER_API_KEY:-changeme-internal-key}
       - MINIO_ENDPOINT=minio:9000
       - MINIO_EXTERNAL_ENDPOINT=

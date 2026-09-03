@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="", extra="ignore")
 
     DATABASE_URL: str = "sqlite+aiosqlite:///./dongle.db"
-    AUTOBRIAN_BACKEND_URL: str = "http://backend:8006"
+    AUTOBRAIN_BACKEND_URL: str = "http://backend:8006"
     DONGLE_SERVER_API_KEY: str = ""
     DONGLE_SERVER_API_KEY_FILE: str | None = None
 
