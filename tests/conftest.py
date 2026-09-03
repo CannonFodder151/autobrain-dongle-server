@@ -11,7 +11,7 @@ import os
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test_dongle.db"
 os.environ["ENVIRONMENT"] = "test"
 os.environ["DONGLE_SERVER_API_KEY"] = "test-internal-key"
-os.environ["AUTOBRIAN_BACKEND_URL"] = "http://backend.test"
+os.environ["AUTOBRAIN_BACKEND_URL"] = "http://backend.test"
 os.environ["MINIO_BUCKET"] = "autobrain-assets"
 os.environ.pop("DONGLE_SERVER_API_KEY_FILE", None)
 os.environ.pop("MINIO_ACCESS_KEY_FILE", None)

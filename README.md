@@ -45,7 +45,7 @@ UI on http://localhost:8012/admin (admin / `WEB_UI_BASIC_PASSWORD`).
 | Variable | Purpose |
 |----------|---------|
 | `DATABASE_URL` | `sqlite+aiosqlite:///...` or `postgresql+asyncpg://...` |
-| `AUTOBRIAN_BACKEND_URL` | AutoBrain backend base (for device-edge paid verify) |
+| `AUTOBRAIN_BACKEND_URL` | AutoBrain backend base (for device-edge paid verify) |
 | `DONGLE_SERVER_API_KEY` | shared secret the backend uses for `/_internal/*` |
 | `MINIO_*` / `MINIO_SECURE` / `MINIO_BUCKET` | blob storage |
 | `MINIO_EXTERNAL_ENDPOINT` | public hostname for presigned URLs (rewrites internal `minio:9000` host) |
